@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gsdz
+      POSTGRES_PASSWORD: gsdz_password
+      POSTGRES_DB: gaming_stuff_dz
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gsdz"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://gsdz:gsdz_password@db:5432/gaming_stuff_dz?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    volumes:
+      - uploads_data:/app/public/uploads
+      - logs_data:/app/logs
+
+volumes:
+  db_data:
+  uploads_data:
+  logs_data:
