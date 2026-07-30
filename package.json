@@ -17,7 +17,7 @@
     "lint": "eslint src"
   },
   "dependencies": {
-    "prisma/client": "^5.20.0",
+    "prisma": "^5.20.0",
     "@prisma/client":"^5.20.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
